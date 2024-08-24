@@ -1,13 +1,16 @@
-const item_creator = {
+const item_creator = { // store_creator
     "books": () => new Book(),
     "book": () => new Document(),
     "document": () => new Line(),
-    "line": () => "New variant"
+    "line": () => ""
 }
 
 class Titlable {
     title = $state()
 }
+
+// SelectableListStore - интерфейс стора
+// SelectableList - функциональный миксин, набор функций
 
 export class SelectableListStore {
 
@@ -33,8 +36,26 @@ export class SelectableListStore {
     set selected_item(value) {
         this.items[this.selected_item_index] = value
     }
-    append() {
-        this.items.push(item_creator[this.type]())
+
+    create() {
+        this.items.splice(this.selected_index + 1, 0, item_creator[this.type]())
+        this.leaf("next")
+    }
+    duplicate() {
+        this.items.push(this.selected_item)
+        this.leaf("next")
+    }
+    remove() {
+        this.items.splice(this.selected_index, 1)
+        if (this.size === 0) {
+            this.create()
+        } else {
+            this.leaf("previous")
+        }
+    }
+
+    add_symbol(key) {
+        this.selected_item += key
     }
 
     get size() {
@@ -56,6 +77,18 @@ export class SelectableListStore {
 				this.selected_index < size ? this.selected_index++ : this.selected_index = 0
 				break
 		}		
+    }
+    select(pointer) { // string | number
+        if (this.items.length <= 1) return
+        if (pointer === "ArrowUp") {
+            this.leaf("previous")
+        } else if (pointer === "ArrowDown") {
+            this.leaf("next")
+        } else if (typeof pointer === "number") {
+            if (this.items[pointer]) {
+                this.selected_index = pointer
+            }
+        }
     }
 }
 
