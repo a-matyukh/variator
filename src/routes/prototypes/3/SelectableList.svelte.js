@@ -1,39 +1,28 @@
-export type ItemCreator<T> = (i: number) => T
-
-export interface SelectableListModel<T> {
-    id: string
-    type: string
-    items: T[]
-    selected_item_index: number
-}
-
-export class SelectableListStore<T> {
+export class SelectableListStore {
     
-    constructor(list: SelectableListModel<T>, item_creator: ItemCreator<T>) {
-        this.list = list
-        console.log(list)
+    constructor(model, item_creator) {
+        this.store = model
         this.item_creator = item_creator
     }
     
-    list: SelectableListModel<T> = $state()
-    item_creator: ItemCreator<T>
+    store = $state()
 
     get size() {
-        return this.list.items.length
+        return this.store.items.length
     }
     create() {
-        this.list.items.splice(this.selected_index + 1, 0, this.item_creator(this.size))
+        this.store.items.splice(this.selected_index + 1, 0, this.item_creator(this.size))
         this.leaf("next")
     }
     duplicate() {
-        this.list.items.push(this.selected_item)
+        this.store.items.push(this.selected_item)
         this.leaf("next")
     }
-    edit(value: T) {
+    edit(value) {
         this.selected_item = value
     }
     remove() {
-        this.list.items.splice(this.selected_index, 1)
+        this.store.items.splice(this.selected_index, 1)
         if (this.size === 0) {
             this.create()
         } else {
@@ -42,25 +31,25 @@ export class SelectableListStore<T> {
     }
 
     get selected_index() {
-        return this.list.selected_item_index
+        return this.store.selected_item_index
     }
     set selected_index(value) {
-        this.list.selected_item_index = value
+        this.store.selected_item_index = value
     }
     get selected_item() {
-        return this.list.items[this.list.selected_item_index]
+        return this.store.items[this.store.selected_item_index]
     }
     set selected_item(value) {
-        this.list.items[this.list.selected_item_index] = value
+        this.store.items[this.store.selected_item_index] = value
     }
     select(pointer) { // string | number
-        if (this.list.items.length <= 1) return
+        if (this.store.items.length <= 1) return
         if (pointer === "ArrowUp") {
             this.leaf("previous")
         } else if (pointer === "ArrowDown") {
             this.leaf("next")
         } else if (typeof pointer === "number") {
-            if (this.list.items[pointer]) {
+            if (this.store.items[pointer]) {
                 this.selected_index = pointer
             }
         }
