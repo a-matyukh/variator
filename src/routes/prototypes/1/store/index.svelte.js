@@ -1,4 +1,4 @@
-import {SelectableListStore} from "./SelectableList.svelte"
+import {SelectableList} from "./SelectableList.svelte"
 import Mode from "./Mode.svelte"
 
 const lineStruct = {
