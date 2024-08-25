@@ -1,7 +1,7 @@
 const item_creator = { // store_creator
     "books": () => new Book(),
     "book": () => new Document(),
-    "document": () => new Line(),
+    "document": () => new LineStore(),
     "line": () => ""
 }
 
@@ -97,9 +97,12 @@ export class Book extends SelectableListStore {
 export class Document extends SelectableListStore {
     constructor() { super("document") }
 }
-export class Line extends SelectableListStore {
+export class LineStore extends SelectableListStore {
     constructor() { super("line") }
 
+    get variants_pager() {
+        return this.size > 1 ? `${this.selected_item_index + 1}/${this.size}` : ""
+    }
     add_symbol(key) {
         this.selected_item += key
     }

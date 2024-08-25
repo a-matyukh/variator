@@ -1,6 +1,7 @@
 <article>
-    {#each app.selected_document.items as line}
+    {#each app.selected_document.items as line, i}
         <Line
+            index={i+1}
             line={line} isEdit={app.mode.isEdit}
             onfocus={() => app.mode.change(Mode.Edit)}
             onblur={() => app.mode.change(Mode.Select)}
@@ -25,6 +26,7 @@
 
 <style>
 :global(body) {
+    font-family: Arial, Helvetica, sans-serif;
     background-color: #f5f5f5;
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -32,7 +34,7 @@
 }
 
 article {
-    padding: 20px 25px;
+    padding: 20px 25px 20px 10px;
 }
 </style>
 
