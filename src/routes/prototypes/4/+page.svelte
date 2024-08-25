@@ -1,11 +1,3 @@
-<button onclick={() => app.mode.toggle()}>mode.toggle</button>
-<br><br>
-<button onclick={() => app.selected_document.create()}>selected_document.append</button>
-<button onclick={() => app.selected_document.leaf("next")}>selected_line.leaf</button>
-<br><br>
-<button onclick={() => app.selected_line.duplicate()}>selected_line.duplicate</button>
-<button onclick={() => app.selected_line.leaf("next")}>selected_line.leaf</button>
-<hr>
 <article>
     {#each app.selected_document.items as line}
         <Line
@@ -16,17 +8,31 @@
         />
     {/each}
 </article>
-<hr>
-
-
-<pre>{JSON.stringify(app.mode.mode, null, 4)}</pre>
-<pre>{JSON.stringify(app.selected_document.selected_item, null, 4)}</pre>
-<pre>{JSON.stringify(app.selected_document.selected_item.selected_item_index, null, 4)}</pre>
-<pre>{JSON.stringify(app.selected_document.selected_item.items, null, 4)}</pre>
+<aside>
+    <button onclick={() => app.mode.toggle()}>mode.toggle</button>
+    <br><br>
+    <button onclick={() => app.selected_document.create()}>selected_document.append</button>
+    <button onclick={() => app.selected_document.leaf("next")}>selected_line.leaf</button>
+    <br><br>
+    <button onclick={() => app.selected_line.duplicate()}>selected_line.duplicate</button>
+    <button onclick={() => app.selected_line.leaf("next")}>selected_line.leaf</button>
+    <hr>
+    <pre>{JSON.stringify(app.mode.mode, null, 4)}</pre>
+    <pre>{JSON.stringify(app.selected_document.selected_item, null, 4)}</pre>
+    <pre>{JSON.stringify(app.selected_document.selected_item.selected_item_index, null, 4)}</pre>
+    <pre>{JSON.stringify(app.selected_document.selected_item.items, null, 4)}</pre>
+</aside>    
 
 <style>
 :global(body) {
     background-color: #f5f5f5;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+article {
+    padding: 20px 25px;
 }
 </style>
 

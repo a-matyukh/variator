@@ -54,10 +54,6 @@ export class SelectableListStore {
         }
     }
 
-    add_symbol(key) {
-        this.selected_item += key
-    }
-
     get size() {
         return this.items.length
     }
@@ -103,4 +99,11 @@ export class Document extends SelectableListStore {
 }
 export class Line extends SelectableListStore {
     constructor() { super("line") }
+
+    add_symbol(key) {
+        this.selected_item += key
+    }
+    isEmpty() {
+        return this.selected_item === ""
+    }
 }

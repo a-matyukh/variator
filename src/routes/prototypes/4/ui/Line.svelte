@@ -19,6 +19,8 @@ input {
 }
 input.current {
     outline: 3px solid yellowgreen;
+    position: relative;
+    z-index: 2;
 }
 input:focus {
     outline: 3px solid orange;
