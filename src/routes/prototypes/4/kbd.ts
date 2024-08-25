@@ -7,14 +7,14 @@ export default function press(e) {
         if (app.mode.isSelect) app.mode.change(Mode.Edit)
         else if (app.mode.isEdit) app.selected_document.create()
     }
+    if (e.key == "Escape") {
+        if (!app.mode.isSelect) app.mode.change(Mode.Select)
+    }
 
     if (e.code == "KeyN" && e.ctrlKey) app.selected_document.create()
     if (e.code == "KeyD" && e.ctrlKey) app.selected_line.duplicate()
     if (e.code == "KeyR" && e.ctrlKey) app.selected_document.remove()
 
-    if (e.key == "Escape") {
-        if (!app.mode.isSelect) app.mode.change(Mode.Select)
-    }
     if (e.key == "Backspace") {
         if (app.selected_document.size > 1 && app.selected_line.isEmpty()) {
             app.selected_document.remove()

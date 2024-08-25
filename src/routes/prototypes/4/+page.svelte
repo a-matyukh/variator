@@ -10,17 +10,20 @@
     {/each}
 </article>
 <aside>
-    <button onclick={() => app.mode.toggle()}>mode.toggle</button>
-    <br><br>
-    <button onclick={() => app.selected_document.create()}>selected_document.append</button>
-    <button onclick={() => app.selected_document.leaf("next")}>selected_line.leaf</button>
-    <br><br>
-    <button onclick={() => app.selected_line.duplicate()}>selected_line.duplicate</button>
-    <button onclick={() => app.selected_line.leaf("next")}>selected_line.leaf</button>
-    <hr>
-    <pre>{JSON.stringify(app.mode.mode, null, 4)}</pre>
-    <pre>{JSON.stringify(app.selected_document.selected_item, null, 4)}</pre>
-    <pre>{JSON.stringify(app.selected_document.selected_item.selected_item_index, null, 4)}</pre>
+    <p>
+        <Action name="{app.mode.isEdit ? "Select" : "Edit"} mode" hotkey={app.mode.isEdit ? 'Escape' : 'Enter'} onclick={() => app.mode.toggle()} />
+        <br><br>
+        <Action name="Add line" hotkey="Ctrl + N" onclick={() => app.selected_document.create()} />
+        <Action name="Duplicate line variant" hotkey="Ctrl + D" onclick={() => app.selected_line.duplicate()} />
+        <Action name="Leaf previous" hotkey="Arrow Left" onclick={() => app.selected_line.leaf("previous")} />
+        <Action name="Leaf next" hotkey="Arrow Right" onclick={() => app.selected_line.leaf("next")} />
+        <br><br>
+        <Action name="Remove variant" hotkey="Ctrl + R" onclick={() => app.selected_line.remove()} />
+    </p>
+    <pre>Selected line:</pre>
+    <pre>id: {JSON.stringify(app.selected_line.id, null, 4)}</pre>
+    <pre>selected_item_index: {JSON.stringify(app.selected_line.selected_item_index, null, 4)}</pre>
+    <pre>items:</pre>
     <pre>{JSON.stringify(app.selected_document.selected_item.items, null, 4)}</pre>
 </aside>    
 
@@ -32,16 +35,18 @@
     grid-template-columns: 1fr 1fr;
     gap: 20px;
 }
-
 article {
     padding: 20px 25px 20px 10px;
 }
+pre {
+    opacity: .5;
+}
 </style>
-
 <script>
 import { app } from "./store/index.svelte"
 import { Mode } from "./store/Mode.svelte"
 import Line from "./ui/Line.svelte"
+import Action from "./ui/Action.svelte"
 import press from "./kbd"
 $effect(() => document.addEventListener("keyup", e => press(e)))
 </script>
