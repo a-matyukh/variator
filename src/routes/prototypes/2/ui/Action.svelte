@@ -9,6 +9,10 @@ button {
     outline: 1px solid #ddd;
     font-size: 13px;
 }
+button:hover {
+    background-color: #fff;
+    cursor: pointer;
+}
 kbd {
     margin-left: 5px;
     opacity: .4;

@@ -4,7 +4,9 @@ export enum Mode {
 }
 
 export default class ModeStore {
-    mode: Mode = $state(Mode.Select)
+
+    mode: Mode = $state(Mode.Select) // private
+
     change(mode: Mode) {
         this.mode = mode
     }

@@ -1,16 +1,8 @@
 const item_creator = { // store_creator
-    "books": () => new Book(),
-    "book": () => new Document(),
+    "book": () => new DocumentStore(),
     "document": () => new LineStore(),
     "line": () => ""
 }
-
-class Titlable {
-    title = $state()
-}
-
-// SelectableListStore - интерфейс стора
-// SelectableList - функциональный миксин, набор функций
 
 export class SelectableListStore {
 
@@ -88,13 +80,7 @@ export class SelectableListStore {
     }
 }
 
-export class Books extends SelectableListStore {
-    constructor() { super("books") }
-}
-export class Book extends SelectableListStore {
-    constructor() { super("book") }
-}
-export class Document extends SelectableListStore {
+export class DocumentStore extends SelectableListStore {
     constructor() { super("document") }
 }
 export class LineStore extends SelectableListStore {
