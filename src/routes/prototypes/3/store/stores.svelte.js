@@ -1,6 +1,7 @@
 const item_creator = { // store_creator
     "book": () => new DocumentStore(),
-    "document": () => new LineStore(),
+    "document": () => new SnapshotStore(),
+    "snapshot": () => new LineStore(),
     "line": () => ""
 }
 
@@ -10,15 +11,9 @@ export class SelectableListStore {
     selected_item_index = $state()
 
     constructor(type, items, selected_item_index) {
-
         this.type = type
-        if (items) {
-            this.items = items
-        } else {
-            this.items = [ item_creator[type]() ]
-        }
+        this.items = items ? items : [ item_creator[type]() ]
         this.selected_item_index = selected_item_index ? selected_item_index : 0
-
         if (["book", "document"].includes(type)) {
             this.id = crypto.randomUUID()
             this.title = `New ${type}`
@@ -34,13 +29,6 @@ export class SelectableListStore {
 
     create() {
         this.items.splice(this.selected_index + 1, 0, item_creator[this.type]())
-        this.leaf("next")
-    }
-    duplicate_line() {
-        this.items.splice(this.selected_index + 1, 0, new LineStore(
-            $state.snapshot(this.selected_item.items),
-            $state.snapshot(this.selected_item.selected_item_index)
-        ))
         this.leaf("next")
     }
     remove() {
@@ -88,10 +76,36 @@ export class SelectableListStore {
 
 export class DocumentStore extends SelectableListStore {
     constructor() { super("document") }
+    duplicate() {
+        let linesStores = []
+        for (const lineStore of this.selected_item.items) {
+            linesStores.push(
+                new LineStore(
+                    $state.snapshot(lineStore.items),
+                    $state.snapshot(lineStore.selected_item_index)
+                )
+            )
+        }
+        const duplicated_snapshot = new SnapshotStore(
+            linesStores,
+            $state.snapshot(this.selected_item.selected_item_index)
+        )
+        this.items.splice(this.selected_index + 1, 0, duplicated_snapshot)
+        this.leaf("next")
+    }
+}
+export class SnapshotStore extends SelectableListStore {
+    constructor(items, selected_item_index) { super("snapshot", items, selected_item_index) }
+    duplicate() {
+        this.items.splice(this.selected_index + 1, 0, new LineStore(
+            $state.snapshot(this.selected_item.items),
+            $state.snapshot(this.selected_item.selected_item_index)
+        ))
+        this.leaf("next")
+    }
 }
 export class LineStore extends SelectableListStore {
     constructor(items, selected_item_index) { super("line", items, selected_item_index) }
-
     get variants_pager() {
         return this.size > 1 ? `${this.selected_item_index + 1}/${this.size}` : ""
     }
@@ -101,7 +115,7 @@ export class LineStore extends SelectableListStore {
     isEmpty() {
         return this.selected_item === ""
     }
-    duplicate_variant() {
+    duplicate() {
         this.items.splice(this.selected_index + 1, 0, this.selected_item)
         this.leaf("next")
     }
